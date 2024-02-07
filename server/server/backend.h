@@ -15,7 +15,7 @@ public:
     ~Backend();
 
 private:
-    QHash<quint16,QPair<QTcpSocket*,QString>> clients;
+    QList<QTcpSocket*> clients;
     DBhandler *m_dbHandler;
     LocalDataManager *m_dataManager;
     QTcpSocket *m_clientSock;
