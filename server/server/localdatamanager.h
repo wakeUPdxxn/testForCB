@@ -7,10 +7,10 @@ class LocalDataManager : public QObject
     Q_OBJECT
 public:
     explicit LocalDataManager(QObject *parent = nullptr);
-    void createFolder(const QString &name);
-    void writeIntoFolder(const QString &name);
+    void saveImage(const QPixmap &image,const QString name,const QString format);
 private:
-    const QString root = "../Downloads";
+    QDir rootFolder;
+    const QString path = "./Downloads";
 signals:
 
 };
