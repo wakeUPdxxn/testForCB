@@ -1,4 +1,5 @@
 #include "backend.h"
+#include "qpixmap.h"
 
 Backend::Backend(QObject *parent)
     : QTcpServer{parent}
@@ -34,14 +35,39 @@ void Backend::connectionHandler()
     connect(m_clientSock,&QTcpSocket::readyRead,this,&Backend::messageReceived);
     connect(m_clientSock,&QTcpSocket::disconnected,this,&Backend::disconnectionEvent);
 
-    clients.emplace(m_clientSock->socketDescriptor(),{m_clientSock, " "});
+    clients.push_back(m_clientSock);
+}
 
 void Backend::disconnectionEvent()
 {
     QTcpSocket *clientSender=(QTcpSocket*)sender();
+    clients.removeOne(clientSender);
+    if(clientSender!=nullptr){
+        clientSender->deleteLater();
+    }
 }
 
 void Backend::messageReceived()
 {
-    QTcpSocket *clientSender=(QTcpSocket*)sender();
+    quint16 nextBlockSize{0};
+    QTcpSocket *senderSock=(QTcpSocket*)sender();
+    QDataStream in(senderSock);
+    QString name;
+    QPixmap image;
+    if(in.status()==QDataStream::Ok){
+        for( ; ; ){
+            if(nextBlockSize==0){
+                if(senderSock->bytesAvailable()<2){
+                      break;
+                }
+                in >> nextBlockSize;
+            }
+            if(senderSock->bytesAvailable() < nextBlockSize){
+                break;
+            }
+            in >> name;
+            in >> image;
+            nextBlockSize=0;
+        }
+    }
 }
