@@ -1,7 +1,8 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
 #include <QMainWindow>
+#include <QFileDialog>
+#include <QHostAddress>
+#include <QMessageBox>
+#include <QImageReader>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,7 +16,25 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_selectFile_released();
+    void on_connectToServer_released();
+    void on_send_released();
+    void on_addrInput_editingFinished();
+
 private:
     Ui::MainWindow *ui;
+    QImage *image=nullptr;
+    QString imageName;
+    QHostAddress serverAddr;
+    QImageReader ir;
+
+public slots:
+    void disableBlock();
+
+signals:
+    void readyForConnection(const QHostAddress serverAddr);
+    void needToSendImage(const QImage *image,const QString name);
 };
-#endif // MAINWINDOW_H
+
+
