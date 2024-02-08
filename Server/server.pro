@@ -2,6 +2,8 @@ QT       +=core
 QT       +=gui
 QT       +=network
 QT       +=widgets
+QT       +=concurrent
+QT       +=sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,20 +14,17 @@ SOURCES += \
     dbhandler.cpp \
     localdatamanager.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    popup.cpp
 
 HEADERS += \
     backend.h \
     dbhandler.h \
     localdatamanager.h \
-    mainwindow.h
+    mainwindow.h \
+    popup.h
 
 FORMS += \
     mainwindow.ui
 
-if(qnx){
-    qnx: target.path = /tmp/$${TARGET}/bin
-}
-else:
-    unix: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+target.path: INSTALLS += target
