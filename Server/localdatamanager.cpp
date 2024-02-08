@@ -1,5 +1,4 @@
 #include "localdatamanager.h"
-#include "qpixmap.h"
 
 LocalDataManager::LocalDataManager(QObject *parent)
     : QObject{parent}
@@ -9,10 +8,12 @@ LocalDataManager::LocalDataManager(QObject *parent)
     }
 }
 
-void LocalDataManager::saveImage(const QPixmap &image,const QString name,const QString format)
+void LocalDataManager::saveImage(const QImage &image,const QString name) const
 {
-    QFile file(path+name);
-    file.open(QIODevice::WriteOnly);
-    image.save(&file,format.toStdString().c_str());
-    file.close();
+    image.save(name);
+}
+
+QString LocalDataManager::getRootPath() const
+{
+    return rootFolder.path();
 }
