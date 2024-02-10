@@ -8,12 +8,21 @@ LocalDataManager::LocalDataManager(QObject *parent)
     }
 }
 
-void LocalDataManager::saveImage(const QImage &image,const QString name) const
+void LocalDataManager::saveImage(const QPixmap *image,const QString name)
 {
-    image.save(name);
+    QImage img = image->toImage();
+    if(!img.save(path+name)){
+        qDebug() << "img saving error";
+    }
+    emit ImageProccessed();
 }
 
 QString LocalDataManager::getRootPath() const
 {
     return rootFolder.path();
+}
+
+void LocalDataManager::setRootPath(const QString &path)
+{
+    this->path=path;
 }
