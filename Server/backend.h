@@ -21,7 +21,7 @@ private:
     DBhandler *m_dbHandler;
     LocalDataManager *m_dataManager;
     QTcpSocket *m_clientSock;
-    qint64 nextBlockSize{0};
+    qint64 messageSize{0};
     QThread *dbThread;
     QFuture<void>imageQueueProccessing;
     QImageReader imr;
@@ -40,7 +40,7 @@ private slots:
 signals:
     void WriteToDb(const QString imageName, const QString path, const QString date);
     void ReadFromDb();
-    void newImage(QPixmap *image,const QString name);
+    void newImage(const QPixmap *image,const QString name);
 
 public slots:
     void disconnectionEvent();

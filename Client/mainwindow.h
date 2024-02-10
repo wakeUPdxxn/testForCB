@@ -38,7 +38,7 @@ public slots:
 
 signals:
     void readyForConnection(const QHostAddress serverAddr);
-    void needToSendImage(QPixmap *image,const QString name);
+    void needToSendImage(const QPixmap *image,const QString name);
     void quiting();
 };
 

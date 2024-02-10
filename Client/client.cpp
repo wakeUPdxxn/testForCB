@@ -23,22 +23,24 @@ void Client::responseReceived() //вероятно удалить
     in >> response;
 }
 
-void Client::sendImage(QPixmap *image,const QString name)
+void Client::sendImage(const QPixmap *image,const QString name)
 {
     if(m_socket->state()!=QAbstractSocket::ConnectedState){
         emit setMessage("Error","Connection lost, try reconnect","warning");
         return;
     }
-    data.clear();
 
+    data.clear();
     QDataStream out(&data,QIODevice::WriteOnly);
 
     out<<qint64(0)<<name<<*image;
     out.device()->seek(0);
     out << qint64(data.size()-sizeof(qint64));
+
     if(m_socket->write(data)==-1){
         emit setMessage("Error","Unable send message"+name,"warning");
     }
+
     delete image;
     image = nullptr;
 }

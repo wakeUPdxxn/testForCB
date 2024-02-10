@@ -98,24 +98,23 @@ void Backend::onServerReadyRead()
     QDataStream in(senderSock);
     if(in.status()==QDataStream::Ok){
         for( ; ; ){
-            if(nextBlockSize==0){
+            if(messageSize==0){
                 if(senderSock->bytesAvailable()<4){
                     break;
                 }
-                in>>nextBlockSize;
+                in>>messageSize;
             }
-            if(senderSock->bytesAvailable()<nextBlockSize){
+            if(senderSock->bytesAvailable()<messageSize){
                 break;
             }
-            qDebug() << "received";
-            nextBlockSize=0;
+            messageSize=0;
+
             QPixmap *image=new QPixmap;
             QString name;
             in >> name;
             in >> *image;
 
             imageProccesingQueue.push_back(image);
-
             imageQueueProccessing=QtConcurrent::run(std::bind(&Backend::waitForImageProccesed,this), 0);
 
             std::ignore = QtConcurrent::run(std::bind(&LocalDataManager::saveImage,m_dataManager,image,name), 0);

@@ -22,7 +22,7 @@ signals:
 
 public slots:
     void responseReceived();
-    void sendImage(QPixmap *image,const QString name);
+    void sendImage(const QPixmap *image,const QString name);
     void connectToServer(const QHostAddress serverAddr);
 };
 
