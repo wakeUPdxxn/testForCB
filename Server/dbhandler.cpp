@@ -1,6 +1,4 @@
 #include "dbhandler.h"
-#include "qthread.h"
-#include <QScopedPointer>
 
 DBhandler::DBhandler(QObject *parent)
     : QObject{parent}
@@ -9,7 +7,9 @@ DBhandler::DBhandler(QObject *parent)
 }
 
 DBhandler::~DBhandler(){
-    qDebug() << "db handler destroyed";
+    if(db.open()){
+        db.close();
+    }
 }
 
 void DBhandler::open()
@@ -28,10 +28,7 @@ void DBhandler::write(const QString imageName, const QString path, const QString
     query.addBindValue(path);
     query.addBindValue(date);
 
-    if(query.exec()){
-        qDebug() << "writed";
-    }
-    else{
+    if(!query.exec()){
         qDebug() << query.lastError();
     }
 }
