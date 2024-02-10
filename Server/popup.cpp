@@ -10,6 +10,7 @@ PopUp::PopUp(QWidget *parent) : QWidget(parent)
                    Qt::WindowStaysOnTopHint);       // Устанавливаем поверх всех окон
     setAttribute(Qt::WA_TranslucentBackground);     // Указываем, что фон будет прозрачным
     setAttribute(Qt::WA_ShowWithoutActivating);     // При показе, виджет не получается фокуса автоматически
+    setAttribute(Qt::WA_DeleteOnClose);
 
     animation.setTargetObject(this);                // Устанавливаем целевой объект анимации
     animation.setPropertyName("popupOpacity");      // Устанавливаем анимируемое свойство
