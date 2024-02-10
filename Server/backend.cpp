@@ -4,7 +4,7 @@ Backend::Backend(QObject *parent)
     : QTcpServer{parent}
 {
     makeSetUp();
-    imr.setAllocationLimit(500);
+    QImageReader::setAllocationLimit(500);
 }
 
 Backend::~Backend(){

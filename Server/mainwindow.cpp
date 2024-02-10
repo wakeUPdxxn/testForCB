@@ -7,13 +7,16 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setAttribute(Qt::WA_DeleteOnClose);//remove after overriging of closeEvent
+
     QScreen* p_Screen = this->screen();
     this->setGeometry(QRect(p_Screen->geometry().left()+p_Screen->geometry().width()/4,
                             p_Screen->geometry().top()+p_Screen->geometry().height()/4,
                             p_Screen->geometry().width()/3,
                             p_Screen->geometry().height()/2));
+
     model=new QStandardItemModel;
     ui->listView->setModel(model);
+
     m_popUp = new PopUp;
     m_popUp->setText("New image!");
 }

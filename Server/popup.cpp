@@ -1,7 +1,5 @@
 #include "popup.h"
 #include <QPainter>
-#include <QApplication>
-#include <QDebug>
 
 PopUp::PopUp(QWidget *parent) : QWidget(parent)
 {

@@ -24,7 +24,6 @@ private:
     qint64 messageSize{0};
     QThread *dbThread;
     QFuture<void>imageQueueProccessing;
-    QImageReader imr;
 
     std::atomic<bool>isFMimageProccesed=false;
     std::atomic<bool>isMWimageProccesed=false;
