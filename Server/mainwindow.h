@@ -23,10 +23,11 @@ public:
 
 signals:
     void getDBdata();
+    void ImageProccessed();
 
 public slots:
     void setTable(QSqlQueryModel* model);
-    void onNewImage(QImage &image,const QString name);
+    void onNewImage(const QPixmap *image,const QString name);
 
 private slots:
     void on_getDB_pb_released();

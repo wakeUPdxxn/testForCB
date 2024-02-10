@@ -6,11 +6,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QScreen *screen=::MainWindow::screen();
-    this->setGeometry(QRect(screen->geometry().left()+screen->geometry().width()/4,
-                            screen->geometry().top()+screen->geometry().height()/4,
-                            screen->geometry().width()/3,
-                            screen->geometry().height()/2));
+    this->setAttribute(Qt::WA_DeleteOnClose);//remove after overriging of closeEvent
+    QScreen* p_Screen = this->screen();
+    this->setGeometry(QRect(p_Screen->geometry().left()+p_Screen->geometry().width()/4,
+                            p_Screen->geometry().top()+p_Screen->geometry().height()/4,
+                            p_Screen->geometry().width()/3,
+                            p_Screen->geometry().height()/2));
     model=new QStandardItemModel;
     ui->listView->setModel(model);
     m_popUp = new PopUp;
@@ -28,6 +29,7 @@ void MainWindow::setTable(QSqlQueryModel *model)
 {
     QTableView *table = new QTableView();
     table->setWindowFlag(Qt::WindowStaysOnTopHint);
+    table->setAttribute(Qt::WA_DeleteOnClose);
     table->setBaseSize(QSize(250,250));
     table->setWindowTitle("DBdata");
     table->setModel(model);
@@ -35,16 +37,17 @@ void MainWindow::setTable(QSqlQueryModel *model)
     table->show();
 }
 
-void MainWindow::onNewImage(QImage &image, const QString name)
+void MainWindow::onNewImage(const QPixmap *image, const QString name)
 {
     m_popUp->show();
     QStandardItem *text = new QStandardItem;
     text->setText(name);
-    QStandardItem *item = new QStandardItem; //
-    item->setData(QVariant(QPixmap::fromImage(image)), Qt::DecorationRole);
+    QStandardItem *item = new QStandardItem;
+    item->setData(*image, Qt::DecorationRole);
     model->appendRow(text);
     model->appendRow(item);
     ui->listView->update();
+    emit ImageProccessed();
 }
 
 
