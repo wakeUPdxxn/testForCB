@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QImageReader>
 #include <QtConcurrent>
+#include <QScreen>
+#include "connectionsettings.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,11 +32,12 @@ private:
     QPixmap *image=nullptr;
     QString imageName;
     QHostAddress serverAddr;
-    QImageReader ir;
+    QScreen *p_Screen;
 
 public slots:
     void disableBlock();
     void showMessage(const QString &title,const QString &text,const QString &type);
+    void onConnectionSettingsClicked(QAction* action);
 
 signals:
     void readyForConnection(const QHostAddress serverAddr);

@@ -7,7 +7,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->send->setDisabled(true);
-    ir.setAllocationLimit(500);
+    setWindowTitle("Client");
+
+    QImageReader::setAllocationLimit(500);
+
+    p_Screen=this->screen();
+
+    connect(ui->Menu,SIGNAL(triggered(QAction*)),SLOT(onConnectionSettingsClicked(QAction*)));
 }
 
 MainWindow::~MainWindow()
@@ -85,5 +91,11 @@ void MainWindow::showMessage(const QString &title,const QString &text,const QStr
     else {
         QMessageBox::critical(this,title,text);
     }
+}
+
+void MainWindow::onConnectionSettingsClicked(QAction *action)
+{
+    ConnectionSettings *connectionSettings=new ConnectionSettings;
+    connectionSettings->setGeometry(QRect(QCursor::pos().x(),QCursor::pos().y(),this->size().width()/3,this->size().height()/2));
 }
 

@@ -77,6 +77,32 @@
     </property>
    </widget>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="Menu">
+    <property name="title">
+     <string>Menu</string>
+    </property>
+    <addaction name="settingsPressed"/>
+    <addaction name="separator"/>
+   </widget>
+   <addaction name="Menu"/>
+  </widget>
+  <action name="settingsPressed">
+   <property name="text">
+    <string>Connection settings</string>
+   </property>
+   <property name="toolTip">
+    <string>Connection preferences</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
