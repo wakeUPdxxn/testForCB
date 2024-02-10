@@ -1,7 +1,10 @@
+#pragma once
+
 #include <QObject>
 #include <QTcpSocket>
-#include "mainwindow.h"
-#include <QThread>
+#include <QtConcurrent>
+#include <QPixmap>
+#include <QFileInfo>
 
 class Client : public QObject
 {
@@ -11,15 +14,15 @@ public:
     ~Client();
     void makeSetUp();
 private:
-    MainWindow *m_mainWindow{nullptr};
     QTcpSocket *m_socket{nullptr};
-
+    QByteArray data;
 signals:
     void disableUiBlock();
+    void setMessage(const QString &title,const QString &text,const QString &type);
 
-private slots:
+public slots:
     void responseReceived();
-    void sendImage(const QImage *image,const QString name);
+    void sendImage(QPixmap *image,const QString name);
     void connectToServer(const QHostAddress serverAddr);
 };
 

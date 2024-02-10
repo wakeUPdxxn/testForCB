@@ -1,8 +1,11 @@
+#pragma once
+
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QHostAddress>
 #include <QMessageBox>
 #include <QImageReader>
+#include <QtConcurrent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,6 +18,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    Ui::MainWindow *ui;
 
 private slots:
     void on_selectFile_released();
@@ -23,18 +27,19 @@ private slots:
     void on_addrInput_editingFinished();
 
 private:
-    Ui::MainWindow *ui;
-    QImage *image=nullptr;
+    QPixmap *image=nullptr;
     QString imageName;
     QHostAddress serverAddr;
     QImageReader ir;
 
 public slots:
     void disableBlock();
+    void showMessage(const QString &title,const QString &text,const QString &type);
 
 signals:
     void readyForConnection(const QHostAddress serverAddr);
-    void needToSendImage(const QImage *image,const QString name);
+    void needToSendImage(QPixmap *image,const QString name);
+    void quiting();
 };
 
 

@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    emit quiting();
     delete ui;
 }
 
@@ -20,16 +21,20 @@ void MainWindow::on_selectFile_released()
     QString path = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                     " ",
                                                     tr("Images (*.png *.xpm *.jpg *.svg *jpeg *ico)"));
+    if(path.isEmpty()) {
+        return;
+    }
     QFileInfo fi(path);
     imageName = fi.fileName();
+
     if(fi.size()>qint64(1e+9)){
         QMessageBox::information(this,"Attention","Selected file is to large");
     }
-    image=new QImage;
+    image=new QPixmap;
     if(!image->load(path)){
         QMessageBox::critical(this,"Error","Error occured while loading image");
         delete image;
-        image=NULL;
+        image=nullptr;
     }
 }
 
@@ -67,5 +72,18 @@ void MainWindow::disableBlock()
     ui->connectToServer->setDisabled(false);
     ui->selectFile->setDisabled(false);
     ui->send->setDisabled(false);
+}
+
+void MainWindow::showMessage(const QString &title,const QString &text,const QString &type)
+{
+    if(type=="information"){
+        QMessageBox::information(this,title,text);
+    }
+    else if(type=="warning"){
+        QMessageBox::warning(this,title,text);
+    }
+    else {
+        QMessageBox::critical(this,title,text);
+    }
 }
 
