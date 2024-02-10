@@ -13,11 +13,13 @@ CONFIG += c++17
 
 SOURCES += \
     client.cpp \
+    connectionsettings.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     client.h \
+    connectionsettings.h \
     mainwindow.h
 
 FORMS += \
