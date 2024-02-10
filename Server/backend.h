@@ -21,12 +21,18 @@ private:
     DBhandler *m_dbHandler;
     LocalDataManager *m_dataManager;
     QTcpSocket *m_clientSock;
+    qint64 nextBlockSize{0};
     QThread *dbThread;
-    QThread *fmThread;
+    QFuture<void>imageQueueProccessing;
     QImageReader imr;
+
+    std::atomic<bool>isFMimageProccesed=false;
+    std::atomic<bool>isMWimageProccesed=false;
+    QQueue<QPixmap*>imageProccesingQueue;
 
 private:
     void makeSetUp();
+    void waitForImageProccesed();
 
 private slots:
     void connectionHandler();
@@ -34,11 +40,13 @@ private slots:
 signals:
     void WriteToDb(const QString imageName, const QString path, const QString date);
     void ReadFromDb();
-    void newImage(QImage &image,const QString name);
+    void newImage(QPixmap *image,const QString name);
 
 public slots:
     void disconnectionEvent();
-    void imageReceived();
+    void onServerReadyRead();
     void getDBdata();
+    void setFMimageProccesed();
+    void setMVimageProccesed();
 };
 
