@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_popUp = new PopUp;
     m_popUp->setText("New image!");
+
 }
 
 MainWindow::~MainWindow()

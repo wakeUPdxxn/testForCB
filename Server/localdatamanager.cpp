@@ -3,15 +3,15 @@
 LocalDataManager::LocalDataManager(QObject *parent)
     : QObject{parent}
 {
-    if(!QFile::exists(path)){
-        rootFolder.mkdir(path);
+    if(!QFile::exists(rootPath)){
+        rootFolder.mkdir(rootPath);
     }
 }
 
 void LocalDataManager::saveImage(const QPixmap *image,const QString name)
 {
     QImage img = image->toImage();
-    if(!img.save(path+name)){
+    if(!img.save(rootPath+name)){
         qDebug() << "img saving error";
     }
     emit ImageProccessed();
@@ -19,10 +19,15 @@ void LocalDataManager::saveImage(const QPixmap *image,const QString name)
 
 QString LocalDataManager::getRootPath() const
 {
-    return rootFolder.path();
+    return rootPath;\
 }
 
 void LocalDataManager::setRootPath(const QString &path)
 {
-    this->path=path;
+    this->rootPath=path;
+}
+
+uint LocalDataManager::GetImagesCount()
+{
+    return rootFolder.count();
 }

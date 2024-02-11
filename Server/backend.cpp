@@ -25,18 +25,21 @@ Backend::~Backend(){
 void Backend::makeSetUp()
 {
     try{
+        m_dataManager = new LocalDataManager(this);
+        connect(m_dataManager,&LocalDataManager::ImageProccessed,this,&Backend::setFMimageProccesed);
+
         m_mainWindow=new MainWindow();
-        m_mainWindow->show();
+
         connect(m_mainWindow,&MainWindow::getDBdata,this,&Backend::getDBdata);
         connect(this,&Backend::newImage,m_mainWindow,&MainWindow::onNewImage);
         connect(m_mainWindow,&MainWindow::ImageProccessed,this,&Backend::setMVimageProccesed);
-        connect(m_mainWindow,&MainWindow::destroyed,this,&Backend::close); //убрать после переопределения слоуз ивента в mainwindow
+        connect(m_mainWindow,&MainWindow::destroyed,this,&Backend::close);
+
+        m_mainWindow->ui->totalReceived_lbl->setText(QString::number(m_dataManager->GetImagesCount()));
+        m_mainWindow->show();
 
         this->listen(QHostAddress::AnyIPv4,quint16(2323));
         connect(this,&Backend::newConnection,this,&Backend::connectionHandler);
-
-        m_dataManager = new LocalDataManager(this);
-        connect(m_dataManager,&LocalDataManager::ImageProccessed,this,&Backend::setFMimageProccesed);
 
         m_dbHandler = new DBhandler();  //initial db
         dbThread = new QThread();
@@ -126,7 +129,7 @@ void Backend::onServerReadyRead()
 
 void Backend::getDBdata()
 {
-    emit ReadFromDb();
+    emit ReadFromDb(); //не имеет смысла.Проще связать сигнал от главного окна сразу с readfromdb а не с getdbdata
 }
 
 void Backend::setFMimageProccesed()

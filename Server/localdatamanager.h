@@ -13,10 +13,11 @@ public:
     void saveImage(const QPixmap *image,const QString name);
     QString getRootPath() const;
     void setRootPath(const QString &path);
+    uint GetImagesCount() const;
 
 private:
     QDir rootFolder;
-    QString path = ".\\Downloads\\";
+    QString rootPath = ".\\Downloads\\";
 
 signals:
     void ImageProccessed();
