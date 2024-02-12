@@ -41,7 +41,7 @@ void Backend::makeSetUp()
 
         m_mainWindow=new MainWindow();
 
-        connect(m_mainWindow,&MainWindow::getDBdata,this,&Backend::getDBdata);
+        connect(m_mainWindow,&MainWindow::getDBdata,this,&Backend::ReadFromDb);
         connect(this,&Backend::newImage,m_mainWindow,&MainWindow::onNewImage);
         connect(m_mainWindow,&MainWindow::destroyed,this,&Backend::close);
 
@@ -80,7 +80,6 @@ void Backend::waitForImageProcesed()
             delete image;
 
             imageProcessingQueue.pop_back();
-            qDebug() << "one processed" << "last" << imageProcessingQueue.size();
             isFMimageProcessed.store(false,std::memory_order_release);
         }
     }
@@ -138,11 +137,6 @@ void Backend::onServerReadyRead()
             senderSock->write(QByteArray("sent"));
         }
     }
-}
-
-void Backend::getDBdata()
-{
-    emit ReadFromDb(); //не имеет смысла.Проще связать сигнал от главного окна сразу с readfromdb а не с getdbdata
 }
 
 void Backend::setFMimageProcessed()

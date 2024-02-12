@@ -44,7 +44,6 @@ signals:
 public slots:
     void disconnectionEvent();
     void onServerReadyRead();
-    void getDBdata();
     void setFMimageProcessed();
     void setMWimageProcessed();
 };
