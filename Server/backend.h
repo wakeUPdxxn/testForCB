@@ -23,15 +23,15 @@ private:
     QTcpSocket *m_clientSock;
     qint64 messageSize{0};
     QThread *dbThread;
-    QFuture<void>imageQueueProccessing;
+    QThread *fmThread;
+    QFuture<void>imageQueueProcessing;
 
-    std::atomic<bool>isFMimageProccesed=false;
-    std::atomic<bool>isMWimageProccesed=false;
-    QQueue<QPixmap*>imageProccesingQueue;
+    std::atomic<bool>isFMimageProcessed=false;
+    QQueue<QPixmap*>imageProcessingQueue;
 
 private:
     void makeSetUp();
-    void waitForImageProccesed();
+    void waitForImageProcesed();
 
 private slots:
     void connectionHandler();
@@ -45,7 +45,7 @@ public slots:
     void disconnectionEvent();
     void onServerReadyRead();
     void getDBdata();
-    void setFMimageProccesed();
-    void setMVimageProccesed();
+    void setFMimageProcessed();
+    void setMWimageProcessed();
 };
 

@@ -23,7 +23,7 @@ public:
 
 signals:
     void getDBdata();
-    void ImageProccessed();
+    void mwImageProcessed();
 
 public slots:
     void setTable(QSqlQueryModel* model);

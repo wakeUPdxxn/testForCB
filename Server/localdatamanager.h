@@ -10,7 +10,6 @@ class LocalDataManager : public QObject
 public:
     explicit LocalDataManager(QObject *parent = nullptr);
     ~LocalDataManager()=default;
-    void saveImage(const QPixmap *image,const QString name);
     QString getStoragePath() const;
     void setStoragePath(const QString &path);
     uint GetImagesCount();
@@ -19,8 +18,11 @@ private:
     QDir rootFolder;
     QString storagePath = ".\\Downloads\\";
 
+public slots:
+    void onNewImage(const QPixmap *image,const QString name);
+
 signals:
-    void ImageProccessed();
+    void fmImageProcessed();
 
 };
 

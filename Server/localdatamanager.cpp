@@ -8,13 +8,13 @@ LocalDataManager::LocalDataManager(QObject *parent)
     }
 }
 
-void LocalDataManager::saveImage(const QPixmap *image,const QString name)
+void LocalDataManager::onNewImage(const QPixmap *image,const QString name)
 {
     QImage img = image->toImage();
     if(!img.save(storagePath+name)){
         qDebug() << "img saving error";
     }
-    emit ImageProccessed();
+    emit fmImageProcessed();
 }
 
 QString LocalDataManager::getStoragePath() const

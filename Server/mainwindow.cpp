@@ -58,7 +58,6 @@ void MainWindow::onNewImage(const QPixmap *image, const QString name)
     QStandardItem *text = new QStandardItem;
     text->setText(name);
     QStandardItem *item = new QStandardItem;
-    //image->toImage().scaled(ui->frame->frameRect().height()/2,ui->frame->frameRect().width()/4)
     item->setData(image->scaled(ui->frame->frameRect().height()/2,ui->frame->frameRect().width()/4), Qt::DecorationRole);
 
     model->appendRow(text);
@@ -66,7 +65,6 @@ void MainWindow::onNewImage(const QPixmap *image, const QString name)
     ui->listView->update();
 
     ui->totalReceived->setText(QString::number(ui->totalReceived->text().toInt()+1));
-    emit ImageProccessed();
 }
 
 
