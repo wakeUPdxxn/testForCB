@@ -27,7 +27,7 @@ signals:
 private:
     QSqlDatabase db;
     quint16 port;
-    QString dbName="C:/Work/repos/testForCB/testDb.db";
+    QString dbName="..\\testDb.db";
     QString hostName="localhost";
     QString userName;
     QString password;
