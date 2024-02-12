@@ -46,12 +46,13 @@ private:
         QString name;
     };
     QQueue<ProccesingImage*>imageProcesingQueue;
+    QStringList imagesToSend;
 
 public slots:
     void disableBlock();
     void showMessage(const QString &title,const QString &text,const QString &type);
     void onConnectionSettingsClicked(QAction* action);
-    void onRemoveImage();
+    void onImageSent();
 
 signals:
     void readyForConnection(const QHostAddress serverAddr);

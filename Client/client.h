@@ -21,7 +21,7 @@ private:
 signals:
     void disableUiBlock();
     void setMessage(const QString &title,const QString &text,const QString &type);
-    void removeImage();
+    void imageSent();
 
 public slots:
     void responseReceived();

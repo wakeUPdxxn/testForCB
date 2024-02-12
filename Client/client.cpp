@@ -18,8 +18,8 @@ Client::~Client()
 
 void Client::responseReceived()
 {
-    if(QString(m_socket->readAll())=="sent"){
-        emit removeImage();
+    if(QString(m_socket->readAll())=="sent"){ //добавить колбек для получения от сервера оставшихся байт до загрузки и реализовать с их помощью процеccbyu
+        emit imageSent();
         emit disableUiBlock();
     }
 }

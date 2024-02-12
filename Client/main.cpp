@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     QObject::connect(&mainWindow,&MainWindow::readyForConnection,client,&Client::connectToServer);
     QObject::connect(&mainWindow,&MainWindow::SendImage,client,&Client::onSendImage);
     QObject::connect(client,&Client::disableUiBlock,&mainWindow,&MainWindow::disableBlock);
-    QObject::connect(client,&Client::removeImage,&mainWindow,&MainWindow::onRemoveImage);
+    QObject::connect(client,&Client::imageSent,&mainWindow,&MainWindow::onImageSent);
     QObject::connect(client,&Client::setMessage,&mainWindow,&MainWindow::showMessage);
 
     clientThread->start();

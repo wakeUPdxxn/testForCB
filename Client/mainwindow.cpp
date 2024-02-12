@@ -24,13 +24,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_selectFile_released()
 {
-    QStringList pathes = QFileDialog::getOpenFileNames(this, tr("Open File"),
+    imagesToSend = QFileDialog::getOpenFileNames(this, tr("Open File"),
                                                     " ",
                                                     tr("Images (*.png *.xpm *.jpg *.svg *jpeg *ico)"));
-    if(pathes.isEmpty()) {
+    if(imagesToSend.isEmpty()) {
         return;
     }
-    foreach (auto path, pathes) {
+    foreach (auto path, imagesToSend) {
         QFileInfo fi(path);
         QString imageName = fi.fileName();
         qDebug() << imageName ;
@@ -63,11 +63,10 @@ void MainWindow::on_connectToServer_released()
 
 void MainWindow::on_send_released()
 {
-    if(imageProcesingQueue.isEmpty()){
+    if(imagesToSend.isEmpty()){
         QMessageBox::warning(this,"Attention","Image(s) not selected");
         return;
-    }
-    ui->send->setDisabled(true);
+    }  
     emit SendImage(imageProcesingQueue.back()->p_Image,imageProcesingQueue.back()->name);
 }
 
@@ -113,10 +112,14 @@ void MainWindow::onConnectionSettingsClicked(QAction *action)
     connectionSettings->show();
 }
 
-void MainWindow::onRemoveImage()
+void MainWindow::onImageSent()
 {
     imageProcesingQueue.back()->deleteLater();
     imageProcesingQueue.pop_back();
-    qDebug() << imageProcesingQueue.size();
+    if(!imageProcesingQueue.isEmpty()){
+        emit SendImage(imageProcesingQueue.back()->p_Image,imageProcesingQueue.back()->name);
+    }
 }
+
+
 
