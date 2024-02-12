@@ -16,18 +16,18 @@ Client::~Client()
     }
 }
 
-void Client::responseReceived() //вероятно удалить
+void Client::responseReceived()
 {
-    QString response;
-    QDataStream in(m_socket);
-    in >> response;
+    if(QString(m_socket->readAll())=="sent"){
+        emit removeImage();
+        emit disableUiBlock();
+    }
 }
 
-void Client::sendImage(const QPixmap *image,const QString name)
+void Client::onSendImage(const QPixmap *image,const QString name)
 {
     if(m_socket->state()!=QAbstractSocket::ConnectedState){
         emit setMessage("Error","Connection lost, try reconnect","warning");
-        return;
     }
 
     data.clear();
@@ -37,12 +37,10 @@ void Client::sendImage(const QPixmap *image,const QString name)
     out.device()->seek(0);
     out << qint64(data.size()-sizeof(qint64));
 
-    if(m_socket->write(data)==-1){
+    if(!m_socket->write(data)){
         emit setMessage("Error","Unable send message"+name,"warning");
     }
 
-    delete image;
-    image = nullptr;
 }
 
 void Client::connectToServer(const QHostAddress serverAddr)

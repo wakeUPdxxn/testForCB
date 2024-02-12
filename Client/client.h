@@ -13,16 +13,19 @@ public:
     explicit Client(QObject *parent = nullptr);
     ~Client();
     void makeSetUp();
+
 private:
     QTcpSocket *m_socket{nullptr};
     QByteArray data;
+
 signals:
     void disableUiBlock();
     void setMessage(const QString &title,const QString &text,const QString &type);
+    void removeImage();
 
 public slots:
     void responseReceived();
-    void sendImage(const QPixmap *image,const QString name);
+    void onSendImage(const QPixmap *image,const QString name);
     void connectToServer(const QHostAddress serverAddr);
 };
 

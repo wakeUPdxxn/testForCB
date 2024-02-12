@@ -29,19 +29,33 @@ private slots:
     void on_addrInput_editingFinished();
 
 private:
-    QPixmap *image=nullptr;
-    QString imageName;
     QHostAddress serverAddr;
-    QScreen *p_Screen;
+    QScreen *p_Screen=nullptr;
+
+    struct ProccesingImage{
+        explicit ProccesingImage(QPixmap*img =nullptr,const QString imageName="")
+            :p_Image(img),name(imageName) {}
+            ~ProccesingImage(){
+                delete p_Image;
+                p_Image = nullptr;
+            }
+            void deleteLater(){
+                this->~ProccesingImage();
+            }
+        QPixmap *p_Image;
+        QString name;
+    };
+    QQueue<ProccesingImage*>imageProcesingQueue;
 
 public slots:
     void disableBlock();
     void showMessage(const QString &title,const QString &text,const QString &type);
     void onConnectionSettingsClicked(QAction* action);
+    void onRemoveImage();
 
 signals:
     void readyForConnection(const QHostAddress serverAddr);
-    void needToSendImage(const QPixmap *image,const QString name);
+    bool SendImage(const QPixmap *image,const QString name);
     void quiting();
 };
 
