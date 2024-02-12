@@ -35,7 +35,7 @@ void Backend::makeSetUp()
         connect(m_mainWindow,&MainWindow::ImageProccessed,this,&Backend::setMVimageProccesed);
         connect(m_mainWindow,&MainWindow::destroyed,this,&Backend::close);
 
-        m_mainWindow->ui->totalReceived_lbl->setText(QString::number(m_dataManager->GetImagesCount()));
+        m_mainWindow->ui->totalReceived->setText(QString::number(m_dataManager->GetImagesCount()));
         m_mainWindow->show();
 
         this->listen(QHostAddress::AnyIPv4,quint16(2323));
@@ -121,8 +121,10 @@ void Backend::onServerReadyRead()
             imageQueueProccessing=QtConcurrent::run(std::bind(&Backend::waitForImageProccesed,this), 0);
 
             std::ignore = QtConcurrent::run(std::bind(&LocalDataManager::saveImage,m_dataManager,image,name), 0);
-            emit WriteToDb(name,m_dataManager->getRootPath()+name,QDate::currentDate().toString());
+            emit WriteToDb(name,m_dataManager->getStoragePath()+name,QDate::currentDate().toString());
             emit newImage(image,name);
+
+            senderSock->write(QByteArray("sent"));
         }
     }
 }

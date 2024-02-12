@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setAttribute(Qt::WA_DeleteOnClose);//remove after overriging of closeEvent
-
+    this->setWindowTitle("Server GUI");
     QScreen* p_Screen = this->screen();
     this->setGeometry(QRect(p_Screen->geometry().left()+p_Screen->geometry().width()/4,
                             p_Screen->geometry().top()+p_Screen->geometry().height()/4,
@@ -33,10 +33,21 @@ void MainWindow::setTable(QSqlQueryModel *model)
 {
     QTableView *table = new QTableView();
     table->setWindowFlag(Qt::WindowStaysOnTopHint);
+    table->setWindowTitle("Database data");
     table->setAttribute(Qt::WA_DeleteOnClose);
-    table->setBaseSize(QSize(250,250));
-    table->setWindowTitle("DBdata");
     table->setModel(model);
+    QSize size(this->width()/2,this->height()/1.5);
+    table->setMinimumSize(size);
+    table->setStyleSheet("QHeaderView::section { background-color:rgb(126, 132, 255); }"
+                         "QTableView {"
+                            "font: bold 20px;"
+                            "color: rgb(252, 238, 255);"
+                            "background-color: #3c3b47;"
+                            "selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5,"
+                            "stop: 0 blue, stop: 1 rgb(83, 189, 255));"
+                         "}"
+                         "font: bold 20px;");
+
     table->hideColumn(0);
     table->show();
 }
@@ -47,10 +58,14 @@ void MainWindow::onNewImage(const QPixmap *image, const QString name)
     QStandardItem *text = new QStandardItem;
     text->setText(name);
     QStandardItem *item = new QStandardItem;
-    item->setData(*image, Qt::DecorationRole);
+    //image->toImage().scaled(ui->frame->frameRect().height()/2,ui->frame->frameRect().width()/4)
+    item->setData(image->scaled(ui->frame->frameRect().height()/2,ui->frame->frameRect().width()/4), Qt::DecorationRole);
+
     model->appendRow(text);
     model->appendRow(item);
     ui->listView->update();
+
+    ui->totalReceived->setText(QString::number(ui->totalReceived->text().toInt()+1));
     emit ImageProccessed();
 }
 
