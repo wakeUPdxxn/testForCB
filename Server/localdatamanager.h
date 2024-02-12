@@ -11,13 +11,13 @@ public:
     explicit LocalDataManager(QObject *parent = nullptr);
     ~LocalDataManager()=default;
     void saveImage(const QPixmap *image,const QString name);
-    QString getRootPath() const;
-    void setRootPath(const QString &path);
-    uint GetImagesCount() const;
+    QString getStoragePath() const;
+    void setStoragePath(const QString &path);
+    uint GetImagesCount();
 
 private:
     QDir rootFolder;
-    QString rootPath = ".\\Downloads\\";
+    QString storagePath = ".\\Downloads\\";
 
 signals:
     void ImageProccessed();
