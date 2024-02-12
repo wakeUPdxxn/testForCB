@@ -38,7 +38,6 @@ ConnectionSettings::ConnectionSettings(QWidget *parent)
     setLayout(&layout);
 
     connect(&save,&QPushButton::clicked,this,&ConnectionSettings::onSavePressed);
-    this->show();
 }
 
 void ConnectionSettings::onSavePressed()
