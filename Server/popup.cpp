@@ -1,35 +1,36 @@
 #include "popup.h"
 #include <QPainter>
 
-PopUp::PopUp(QWidget *parent) : QWidget(parent)
+PopUp::PopUp(QWidget *parent)
+    : QWidget(parent)
 {
-    setWindowFlags(Qt::FramelessWindowHint |        // Отключаем оформление окна
-                   Qt::Tool |                       // Отменяем показ в качестве отдельного окна
-                   Qt::WindowStaysOnTopHint);       // Устанавливаем поверх всех окон
-    setAttribute(Qt::WA_TranslucentBackground);     // Указываем, что фон будет прозрачным
-    setAttribute(Qt::WA_ShowWithoutActivating);     // При показе, виджет не получается фокуса автоматически
+    setWindowFlags(Qt::FramelessWindowHint |
+                   Qt::Tool |
+                   Qt::WindowStaysOnTopHint);
+    setAttribute(Qt::WA_TranslucentBackground);
+    setAttribute(Qt::WA_ShowWithoutActivating);
     setAttribute(Qt::WA_DeleteOnClose);
 
-    animation.setTargetObject(this);                // Устанавливаем целевой объект анимации
-    animation.setPropertyName("popupOpacity");      // Устанавливаем анимируемое свойство
-    connect(&animation, &QAbstractAnimation::finished, this, &PopUp::hide); /* Подключаем сигнал окончания
-                                                                             * анимации к слоты скрытия
-                                                                             * */
+    animation.setTargetObject(this);
+    animation.setPropertyName("popupOpacity");
+    connect(&animation, &QAbstractAnimation::finished, this, &PopUp::hide);
 
-    // Настройка текста уведомления
-    label.setAlignment(Qt::AlignHCenter | Qt::AlignVCenter); // Устанавливаем по центру
-    // И настраиваем стили
+
+
+
+    label.setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
     label.setStyleSheet("QLabel { color : white; "
                         "margin-top: 6px;"
                         "margin-bottom: 6px;"
                         "margin-left: 10px;"
                         "margin-right: 10px; }");
 
-    // Производим установку текста в размещение, ...
-    layout.addWidget(&label, 0, 0);
-    setLayout(&layout); // которое помещаем в виджет
 
-    // По сигналу таймера будет произведено скрытие уведомления, если оно видимо
+    layout.addWidget(&label, 0, 0);
+    setLayout(&layout);
+
+
     timer = new QTimer();
     connect(timer, &QTimer::timeout, this, &PopUp::hideAnimation);
 }
@@ -38,60 +39,54 @@ void PopUp::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
 
-    /* А теперь настраиваем фон уведомления,
-     * который является прямоугольником с чёрным фоном
-     * */
     QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing); // Включаем сглаживание
+    painter.setRenderHint(QPainter::Antialiasing);
 
-    // Подготавливаем фон. rect() возвращает внутреннюю геометрию виджета уведомления, по содержимому
+
     QRect roundedRect;
     roundedRect.setX(rect().x() + 5);
     roundedRect.setY(rect().y() + 5);
     roundedRect.setWidth(rect().width() - 10);
     roundedRect.setHeight(rect().height() - 10);
 
-    // Кисть настраиваем на чёрный цвет в режиме полупрозрачности 180 из 255
     painter.setBrush(QBrush(QColor(0,0,0,180)));
-    painter.setPen(Qt::NoPen); // Край уведомления не будет выделен
+    painter.setPen(Qt::NoPen);
 
-    // Отрисовываем фон с закруглением краёв в 10px
     painter.drawRoundedRect(roundedRect, 10, 10);
 }
 
 void PopUp::setText(const QString &text)
 {
-    label.setText(text);    // Устанавливаем текст в Label
-    adjustSize();           // С пересчётом размеров уведомления
+    label.setText(text);
+    adjustSize();
 }
 
 void PopUp::show()
 {
-    setWindowOpacity(0.0);  // Устанавливаем прозрачность в ноль
+    setWindowOpacity(0.0);
 
-    animation.setDuration(150);     // Настраиваем длительность анимации
-    animation.setStartValue(0.0);   // Стартовое значение будет 0 (полностью прозрачный виджет)
-    animation.setEndValue(1.0);     // Конечное - полностью непрозрачный виджет
+    animation.setDuration(150);
+    animation.setStartValue(0.0);
+    animation.setEndValue(1.0);
 
     setGeometry(QRect(0,0,200,100));
-    QWidget::show();                // Отображаем виджет, который полностью прозрачен
+    QWidget::show();
 
-    animation.start();              // И запускаем анимацию
-    timer->start(3000);             // А также стартуем таймер, который запустит скрытие уведомления через 3 секунды
+    animation.start();
+    timer->start(3000);
 }
 
 void PopUp::hideAnimation()
 {
-    timer->stop();                  // Останавливаем таймер
-    animation.setDuration(1000);    // Настраиваем длительность анимации
-    animation.setStartValue(1.0);   // Стартовое значение будет 1 (полностью непрозрачный виджет)
-    animation.setEndValue(0.0);     // Конечное - полностью прозрачный виджет
-    animation.start();              // И запускаем анимацию
+    timer->stop();
+    animation.setDuration(1000);
+    animation.setStartValue(1.0);
+    animation.setEndValue(0.0);
+    animation.start();
 }
 
 void PopUp::hide()
 {
-    // Если виджет прозрачный, то скрываем его
     if(getPopupOpacity() == 0.0){
         QWidget::hide();
     }
