@@ -5,6 +5,7 @@
 #include <QtConcurrent>
 #include <QPixmap>
 #include <QFileInfo>
+#include "localdatamanager.h"
 
 class Client : public QObject
 {
@@ -16,16 +17,23 @@ public:
 
 private:
     QTcpSocket *m_socket{nullptr};
-    QByteArray data;
+    QByteArray data;  
+    LocalDataManager dm;
+    QHostAddress serverAddr;
+    quint16 port;
+    bool autoConnect;
+    QRegularExpression ipRex{"([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3})"};
 
 signals:
     void disableUiBlock();
     void setMessage(const QString &title,const QString &text,const QString &type);
     void imageSent();
+    void changeStatus(const int);
 
 public slots:
     void responseReceived();
     void onSendImage(const QPixmap *image,const QString name);
-    void connectToServer(const QHostAddress serverAddr);
+    void connectToServer();
+    void setConnectionData();
 };
 

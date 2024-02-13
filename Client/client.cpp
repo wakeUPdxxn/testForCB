@@ -7,6 +7,12 @@ Client::Client(QObject *parent)
 
     connect(m_socket,&QTcpSocket::readyRead,this,&Client::responseReceived);
     connect(m_socket,&QTcpSocket::disconnected,m_socket,&QTcpSocket::deleteLater);
+
+    this->setConnectionData();
+
+    if(autoConnect==true){
+        this->connectToServer();
+    }
 }
 
 Client::~Client()
@@ -18,9 +24,9 @@ Client::~Client()
 
 void Client::responseReceived()
 {
-    if(QString(m_socket->readAll())=="sent"){ //добавить колбек для получения от сервера оставшихся байт до загрузки и реализовать с их помощью процеccbyu
-        emit imageSent();
-        emit disableUiBlock();
+    QString response=m_socket->readLine();
+    if(response=="received"){ //добавить колбек для получения от сервера оставшихся байт до загрузки и реализовать с их помощью процеccbyu
+       emit imageSent();
     }
 }
 
@@ -43,13 +49,25 @@ void Client::onSendImage(const QPixmap *image,const QString name)
 
 }
 
-void Client::connectToServer(const QHostAddress serverAddr)
+void Client::connectToServer()
 {
+    if(serverAddr.isNull()){
+        emit setMessage("Connection settings","Ip is null. Please specify it in connection setting menu ","information");
+        return;
+    }
+    if(!ipRex.match(serverAddr.toString()).hasMatch()){
+        emit setMessage("Connection settings","Incorrect ip","information");
+        return;
+    }
+    else if(port==0){
+        emit setMessage("Connection settings","Incorrect port","information");
+        return;
+    }
     if(m_socket->state()==QAbstractSocket::ConnectedState){
         m_socket->waitForDisconnected(3000);
     }
 
-    m_socket->connectToHost(serverAddr,2323);//2323
+    m_socket->connectToHost(serverAddr,port);//2323
 
     if(m_socket->waitForConnected(int(3000))){
         emit disableUiBlock();
@@ -59,6 +77,11 @@ void Client::connectToServer(const QHostAddress serverAddr)
         emit disableUiBlock();
         emit setMessage("Error","Connection timeout reached","warning");
     }
+}
+
+void Client::setConnectionData()
+{
+    std::tie(serverAddr,port,autoConnect)=dm.getConnectionData();
 }
 
 
