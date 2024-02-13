@@ -117,11 +117,11 @@ void Backend::onServerReadyRead()
                 in>>messageSize;
             }
             if(senderSock->bytesAvailable()<messageSize){
+                data.clear();
                 QDataStream out(&data,QIODevice::WriteOnly);
-                out << "sentBytes";
+                out << QString("sentBytes");
                 out << senderSock->bytesAvailable();
                 senderSock->write(data);
-                data.clear();
                 break;
             }
             messageSize=0;
