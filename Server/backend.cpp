@@ -117,6 +117,11 @@ void Backend::onServerReadyRead()
                 in>>messageSize;
             }
             if(senderSock->bytesAvailable()<messageSize){
+                QDataStream out(&data,QIODevice::WriteOnly);
+                out << "sentBytes";
+                out << senderSock->bytesAvailable();
+                senderSock->write(data);
+                data.clear();
                 break;
             }
             messageSize=0;
@@ -134,7 +139,7 @@ void Backend::onServerReadyRead()
             emit WriteToDb(name,m_dataManager->getStoragePath()+name,QDate::currentDate().toString());
             emit newImage(image,name);
 
-            senderSock->write(QByteArray("sent"));
+            senderSock->write(QByteArray("received"));
         }
     }
 }

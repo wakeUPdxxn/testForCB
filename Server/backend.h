@@ -22,6 +22,7 @@ private:
     LocalDataManager *m_dataManager;
     QTcpSocket *m_clientSock;
     qint64 messageSize{0};
+    QByteArray data;
     QThread *dbThread;
     QThread *fmThread;
     QFuture<void>imageQueueProcessing;
@@ -45,6 +46,5 @@ public slots:
     void disconnectionEvent();
     void onServerReadyRead();
     void setFMimageProcessed();
-    void setMWimageProcessed();
 };
 
