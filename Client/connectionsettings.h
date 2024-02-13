@@ -24,6 +24,9 @@ private:
     QGridLayout layout;
     QCheckBox isAutoConnect;
 
+signals:
+    void dataSaved();
+
 private slots:
     void onSavePressed();
 };

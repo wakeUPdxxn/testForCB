@@ -1,16 +1,18 @@
 #include "connectionsettings.h"
+#include "localdatamanager.h"
 
 ConnectionSettings::ConnectionSettings(QWidget *parent)
     : QWidget{parent}
 {
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle("Connection Settings");
-    this->setStyleSheet("QWidget { background-color: #2F4F4F;}"
-                        "QLabel { color : black; }"
+    this->setStyleSheet("QWidget { background-color: #4f4f4f;"
+                        "font: bold 20px solid;"
+                        "color: #222222 }"
 
                         "QPushButton { "
-                        "background-color: blue; "
-                        "border: 2px solid;"
+                        "background-color: rgb(255, 73, 56);"
+                        "border: 2px solid rgb(255, 73, 56);"
                         "border-radius: 8px }"
 
                         "QLineEdit { "
@@ -42,7 +44,13 @@ ConnectionSettings::ConnectionSettings(QWidget *parent)
 
 void ConnectionSettings::onSavePressed()
 {
-    //обращаемся к классу управления данными для записи в json файл
+    if(this->addrInput.text()=="localhost" || this->addrInput.text()=="LOCALHOST"){
+        LocalDataManager::setConnectionData(QHostAddress::LocalHost,quint16(this->portInput.text().toUInt()),isAutoConnect.isChecked());
+    }
+    else{
+        LocalDataManager::setConnectionData(QHostAddress(this->addrInput.text()),quint16(this->portInput.text().toUInt()),isAutoConnect.isChecked());
+    }
+    emit dataSaved();
 }
 
 
