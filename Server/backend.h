@@ -4,6 +4,7 @@
 #include <QException>
 #include <QImageReader>
 #include <QtConcurrent>
+#include <QMutex>
 #include "dbhandler.h"
 #include "localdatamanager.h"
 #include "mainwindow.h"
@@ -27,6 +28,7 @@ private:
     QThread *fmThread;
     QFuture<void>imageQueueProcessing;
 
+    QMutex m_mt;
     std::atomic<bool>isFMimageProcessed=false;
     QQueue<QPixmap*>imageProcessingQueue;
 

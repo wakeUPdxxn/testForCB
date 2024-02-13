@@ -1,4 +1,5 @@
 #include "backend.h"
+#include <QMutexLocker>
 
 Backend::Backend(QObject *parent)
     : QTcpServer{parent}
@@ -74,12 +75,14 @@ void Backend::makeSetUp()
 
 void Backend::waitForImageProcesed()
 {
+
     while(!imageProcessingQueue.isEmpty()){
         if(isFMimageProcessed.load(std::memory_order_acquire)){
-            auto image = imageProcessingQueue.back();
+            QMutexLocker mtlk(&m_mt);
+            auto image = imageProcessingQueue.front();
             delete image;
 
-            imageProcessingQueue.pop_back();
+            imageProcessingQueue.pop_front();
             isFMimageProcessed.store(false,std::memory_order_release);
         }
     }
@@ -117,29 +120,25 @@ void Backend::onServerReadyRead()
                 in>>messageSize;
             }
             if(senderSock->bytesAvailable()<messageSize){
-                data.clear();
-                QDataStream out(&data,QIODevice::WriteOnly);
-                out << QString("sentBytes");
-                out << senderSock->bytesAvailable();
-                senderSock->write(data);
                 break;
-            }
+            }       
             messageSize=0;
+            senderSock->write(QByteArray("received"));
 
             QPixmap *image=new QPixmap;
             QString name;
             in >> name;
             in >> *image;
 
+            m_mt.lock();
             imageProcessingQueue.push_back(image);
+            m_mt.unlock();
 
             if(!imageQueueProcessing.isRunning()){
                 imageQueueProcessing=QtConcurrent::run(std::bind(&Backend::waitForImageProcesed,this), 0);
             }
             emit WriteToDb(name,m_dataManager->getStoragePath()+name,QDate::currentDate().toString());
             emit newImage(image,name);
-
-            senderSock->write(QByteArray("received"));
         }
     }
 }
