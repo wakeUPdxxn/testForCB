@@ -14,12 +14,14 @@ CONFIG += c++17
 SOURCES += \
     client.cpp \
     connectionsettings.cpp \
+    localdatamanager.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     client.h \
     connectionsettings.h \
+    localdatamanager.h \
     mainwindow.h
 
 FORMS += \
