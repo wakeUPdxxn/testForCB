@@ -1,13 +1,9 @@
 #pragma once
 
 #include <QMainWindow>
-#include <QFileDialog>
 #include <QHostAddress>
-#include <QMessageBox>
-#include <QImageReader>
 #include <QtConcurrent>
 #include <QScreen>
-#include "connectionsettings.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,13 +20,15 @@ public:
 
 private slots:
     void on_selectFile_released();
+    void on_selectFile_pressed();
     void on_connectToServer_released();
+    void on_connectToServer_pressed();
     void on_send_released();
-    void on_addrInput_editingFinished();
+    void on_send_pressed();
 
 private:
-    QHostAddress serverAddr;
     QScreen *p_Screen=nullptr;
+    void setShadow(QWidget *obj);
 
     struct ProccesingImage{
         explicit ProccesingImage(QPixmap*img =nullptr,const QString imageName="")
@@ -43,7 +41,7 @@ private:
                 this->~ProccesingImage();
             }
         QPixmap *p_Image;
-        QString name;
+        const QString name;
     };
     QQueue<ProccesingImage*>imageProcesingQueue;
     QStringList imagesToSend;
@@ -53,11 +51,13 @@ public slots:
     void showMessage(const QString &title,const QString &text,const QString &type);
     void onConnectionSettingsClicked(QAction* action);
     void onImageSent();
+    void onChangeStatus(const int percent);
 
 signals:
-    void readyForConnection(const QHostAddress serverAddr);
+    void readyForConnection();
     bool SendImage(const QPixmap *image,const QString name);
     void quiting();
+    void onDataSaved(); //cathing dataSaved signal from connection settings and rethrowing to client;
 };
 
 
