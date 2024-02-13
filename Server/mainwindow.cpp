@@ -55,6 +55,7 @@ void MainWindow::setTable(QSqlQueryModel *model)
 void MainWindow::onNewImage(const QPixmap *image, const QString name)
 {
     m_popUp->show();
+
     QStandardItem *text = new QStandardItem;
     text->setText(name);
     QStandardItem *item = new QStandardItem;
@@ -63,7 +64,6 @@ void MainWindow::onNewImage(const QPixmap *image, const QString name)
     model->appendRow(text);
     model->appendRow(item);
     ui->listView->update();
-
     ui->totalReceived->setText(QString::number(ui->totalReceived->text().toInt()+1));
 }
 
