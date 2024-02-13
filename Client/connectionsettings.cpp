@@ -50,6 +50,7 @@ void ConnectionSettings::onSavePressed()
     else{
         LocalDataManager::setConnectionData(QHostAddress(this->addrInput.text()),quint16(this->portInput.text().toUInt()),isAutoConnect.isChecked());
     }
+    this->save.setText("saved!");
     emit dataSaved();
 }
 
