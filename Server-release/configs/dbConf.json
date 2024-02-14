@@ -1,0 +1,7 @@
+{
+    "dbDriverName": "QSQLITE",
+    "dbName": "./testDb.db",
+    "hostName": "localhost",
+    "password": "",
+    "user": ""
+}
