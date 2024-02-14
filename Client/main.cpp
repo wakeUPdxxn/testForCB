@@ -21,7 +21,6 @@ int main(int argc, char *argv[])
     QObject::connect(&mainWindow,&MainWindow::SendImage,client,&Client::onSendImage);
     QObject::connect(&mainWindow,&MainWindow::onDataSaved,client,&Client::setConnectionData);
 
-    QObject::connect(client,&Client::disableUiBlock,&mainWindow,&MainWindow::disableBlock);
     QObject::connect(client,&Client::imageSent,&mainWindow,&MainWindow::onImageSent);
     QObject::connect(client,&Client::setMessage,&mainWindow,&MainWindow::showMessage);
     QObject::connect(client,&Client::changeStatus,&mainWindow,&MainWindow::onChangeStatus);

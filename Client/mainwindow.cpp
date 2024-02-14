@@ -74,8 +74,6 @@ void MainWindow::on_selectFile_pressed() {
 void MainWindow::on_connectToServer_released()
 {
     ui->connectToServer->setGraphicsEffect(nullptr);
-    ui->connectToServer->setDisabled(true);
-    ui->selectFile->setDisabled(true);
     emit readyForConnection();
 }
 
@@ -109,19 +107,6 @@ void MainWindow::setShadow(QWidget *widget)
     QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
     effect->setBlurRadius(3);
     widget->setGraphicsEffect(effect);
-}
-
-void MainWindow::disableBlock()
-{
-    if(!ui->connectToServer->isEnabled()){
-        ui->connectToServer->setDisabled(false);
-    }
-    if(!ui->selectFile->isEnabled()){
-        ui->selectFile->setDisabled(false);
-    }
-    if(!ui->send->isEnabled()){
-        ui->send->setDisabled(false);
-    }
 }
 
 void MainWindow::showMessage(const QString &title,const QString &text,const QString &type)

@@ -47,7 +47,6 @@ private:
     QStringList imagesToSend;
 
 public slots:
-    void disableBlock();
     void showMessage(const QString &title,const QString &text,const QString &type);
     void onConnectionSettingsClicked(QAction* action);
     void onImageSent();

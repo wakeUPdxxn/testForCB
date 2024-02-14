@@ -25,7 +25,7 @@ font: bold 25px;
 color: rgb(252, 238, 255);
 background-color: rgb(126, 132, 255);               
 border: 2px solid rgb(126, 132, 255);
-border-radius: 6px;
+border-radius: 8px;
 padding: 3px;
 }
 </string>
