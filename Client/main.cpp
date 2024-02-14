@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     Client *client=new Client;
     QThread *clientThread = new QThread;
     client->moveToThread(clientThread);
+    QObject::connect(clientThread,&QThread::started,client,&Client::makeSetUp);
     QObject::connect(clientThread,&QThread::finished,client,&Client::deleteLater);
 
     MainWindow mainWindow;

@@ -11,9 +11,15 @@ void LocalDataManager::setConnectionData(const QHostAddress ip, const qint16 por
     userData.open(QIODevice::ReadOnly);
     QJsonObject obj=QJsonDocument::fromJson(userData.readAll()).object();
     userData.close();
-    obj["address"]=ip.toString();
-    obj["port"]=port;
-    obj["autoConnect"]=flag;
+    if(!ip.isNull()){
+        obj["address"]=ip.toString();
+    }
+    if(port!=0){
+        obj["port"]=port;
+    }
+    if(obj["autoConnect"].toBool()!=flag){
+        obj["autoConnect"]=flag;
+    }
     userData.open(QIODevice::WriteOnly);
     userData.write(QJsonDocument(obj).toJson());
     userData.close();

@@ -9,16 +9,19 @@ Client::Client(QObject *parent)
     connect(m_socket,&QTcpSocket::disconnected,m_socket,&QTcpSocket::deleteLater);
 
     this->setConnectionData();
-
-    if(autoConnect==true){
-        this->connectToServer();
-    }
 }
 
 Client::~Client()
 {
     if(m_socket!=nullptr){
         m_socket->deleteLater();
+    }
+}
+
+void Client::makeSetUp()
+{
+    if(autoConnect){
+        connectToServer();
     }
 }
 
