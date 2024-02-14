@@ -28,7 +28,7 @@ void Client::makeSetUp()
 void Client::responseReceived()
 {
     QString response=m_socket->readLine();
-    if(response=="received"){ //добавить колбек для получения от сервера оставшихся байт до загрузки и реализовать с их помощью процеccbyu
+    if(response=="received"){
        emit imageSent();
     }
 }
