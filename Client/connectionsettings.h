@@ -19,8 +19,6 @@ private:
     QLineEdit addrInput;
     QLineEdit portInput;
     QPushButton save;
-    QString address;
-    QString port;
     QGridLayout layout;
     QCheckBox isAutoConnect;
 

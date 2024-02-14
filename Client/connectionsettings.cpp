@@ -45,10 +45,10 @@ ConnectionSettings::ConnectionSettings(QWidget *parent)
 void ConnectionSettings::onSavePressed()
 {
     if(this->addrInput.text()=="localhost" || this->addrInput.text()=="LOCALHOST"){
-        LocalDataManager::setConnectionData(QHostAddress::LocalHost,quint16(this->portInput.text().toUInt()),isAutoConnect.isChecked());
+        LocalDataManager::saveConnectionData(QHostAddress::LocalHost,quint16(this->portInput.text().toUInt()),isAutoConnect.isChecked());
     }
     else{
-        LocalDataManager::setConnectionData(QHostAddress(this->addrInput.text()),quint16(this->portInput.text().toUInt()),isAutoConnect.isChecked());
+        LocalDataManager::saveConnectionData(QHostAddress(this->addrInput.text()),quint16(this->portInput.text().toUInt()),isAutoConnect.isChecked());
     }
     this->save.setText("saved!");
     emit dataSaved();
