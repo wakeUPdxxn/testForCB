@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QImage>
 #include <QPixmap>
+#include <QHostAddress>
 
 class LocalDataManager : public QObject
 {
@@ -13,6 +14,9 @@ public:
     QString getStoragePath() const;
     void setStoragePath(const QString &path);
     uint GetImagesCount();
+    static void saveDbData(const QString name,const QString host,const std::optional<QString> user,const std::optional<QString> password,const QString driver);
+    static QVariantMap getDbData();
+    static std::tuple<QHostAddress, quint16, QString> getConfigData();
 
 private:
     QDir rootFolder;
@@ -20,7 +24,6 @@ private:
 
 public slots:
     void onNewImage(const QPixmap *image,const QString name);
-
 signals:
     void fmImageProcessed();
 
