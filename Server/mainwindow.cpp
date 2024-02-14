@@ -1,12 +1,17 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "dbsettings.h"
+#include <QMessageBox>
+#include <QHostAddress>
+#include <QNetworkInterface>
+#include <localdatamanager.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setAttribute(Qt::WA_DeleteOnClose);//remove after overriging of closeEvent
+    this->setAttribute(Qt::WA_DeleteOnClose);
     this->setWindowTitle("Server GUI");
     QScreen* p_Screen = this->screen();
     this->setGeometry(QRect(p_Screen->geometry().left()+p_Screen->geometry().width()/4,
@@ -18,8 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->listView->setModel(model);
 
     m_popUp = new PopUp;
-    m_popUp->setText("New image!");
+    m_popUp->setText("Server started!");
 
+    connect(ui->Menu,SIGNAL(triggered(QAction*)),SLOT(onDbSettingsClicked(QAction*)));
 }
 
 MainWindow::~MainWindow()
@@ -54,6 +60,7 @@ void MainWindow::setTable(QSqlQueryModel *model)
 
 void MainWindow::onNewImage(const QPixmap *image, const QString name)
 {
+    m_popUp->setText("New image! " + name);
     m_popUp->show();
 
     QStandardItem *text = new QStandardItem;
@@ -73,5 +80,47 @@ void MainWindow::on_getDB_pb_released()
    emit getDBdata();
 }
 
+void MainWindow::onDbSettingsClicked(QAction *action)
+{
+
+    if(action->text()=="Database settings"){
+        DBsettings *dbSettings=new DBsettings;
+
+        connect(dbSettings,&DBsettings::dataSaved,this,&MainWindow::onDbDataSaved);
+
+        dbSettings->setGeometry(QRect(QCursor::pos().x(),QCursor::pos().y(),this->size().width()/2,this->size().height()));
+        dbSettings->setFixedSize(dbSettings->geometry().width()+160,dbSettings->geometry().height()-200);
+        dbSettings->show();
+    }
+    else{
+        QList<QHostAddress>allowedAddresses{QNetworkInterface::allAddresses()};
+        allowedAddresses.removeIf([](const QHostAddress &address){
+            return (address.toString().contains(':')) ?true :false;
+        });
+
+        QString infoStr="Server listening at interfaces: \n";
+
+        foreach (auto address, allowedAddresses) {
+            infoStr+=address.toString()+"\n";
+        }
+        infoStr+="on port:" + QString::number(get<1>(LocalDataManager::getConfigData()));
+        infoStr+="\nand listening" + get<0>(LocalDataManager::getConfigData()).toString() + " address(es)";
+
+        QMessageBox::information(this,"Server info",infoStr);
+    }
+}
+
+void MainWindow::onSetMessage(const QString &title,const QString &text,const QString &type)
+{
+    if(type=="information"){
+        QMessageBox::information(this,title,text);
+    }
+    else if(type=="warning"){
+        QMessageBox::warning(this,title,text);
+    }
+    else {
+        QMessageBox::critical(this,title,text);
+    }
+}
 
 

@@ -24,10 +24,13 @@ public:
 signals:
     void getDBdata();
     void mwImageProcessed();
+    void onDbDataSaved(); //for rethrowing signal "dataSaved" from dbsettings to backend
 
 public slots:
+    void onSetMessage(const QString &title,const QString &text,const QString &type);
     void setTable(QSqlQueryModel* model);
     void onNewImage(const QPixmap *image,const QString name);
+    void onDbSettingsClicked(QAction* action);
 
 private slots:
     void on_getDB_pb_released();

@@ -13,6 +13,8 @@
   <property name="font">
    <font>
     <family>Montserrat</family>
+    <pointsize>-1</pointsize>
+    <italic>false</italic>
     <bold>true</bold>
    </font>
   </property>
@@ -21,6 +23,8 @@
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: #22222e;
+font: bold 20px;
+color: rgb(79, 71, 68);
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -192,17 +196,23 @@ color: rgb(79, 71, 68);</string>
     <string notr="true">font: bold 20px;
 color: rgb(79, 71, 68);</string>
    </property>
-   <widget class="QMenu" name="menuMenu">
+   <widget class="QMenu" name="Menu">
     <property name="title">
      <string>Menu</string>
     </property>
-    <addaction name="actionDatabase_settings"/>
+    <addaction name="dbSettings"/>
+    <addaction name="serverInfo"/>
    </widget>
-   <addaction name="menuMenu"/>
+   <addaction name="Menu"/>
   </widget>
-  <action name="actionDatabase_settings">
+  <action name="dbSettings">
    <property name="text">
     <string>Database settings</string>
+   </property>
+  </action>
+  <action name="serverInfo">
+   <property name="text">
+    <string>Server info</string>
    </property>
   </action>
  </widget>
