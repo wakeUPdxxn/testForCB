@@ -1,5 +1,8 @@
 #include "backend.h"
 #include <QMutexLocker>
+#include <QMessageBox>
+
+//Сделать логирование -
 
 Backend::Backend(QObject *parent)
     : QTcpServer{parent}
@@ -49,7 +52,9 @@ void Backend::makeSetUp()
         m_mainWindow->ui->totalReceived->setText(QString::number(m_dataManager->GetImagesCount()));
         m_mainWindow->show();
 
-        this->listen(QHostAddress::AnyIPv4,quint16(2323));
+        auto confData = LocalDataManager::getConfigData();
+        m_dataManager->setStoragePath(get<2>(confData));
+        this->listen(std::get<0>(confData),std::get<1>(confData));
         connect(this,&Backend::newConnection,this,&Backend::connectionHandler);
 
         m_dbHandler = new DBhandler();  //initial db
@@ -63,12 +68,14 @@ void Backend::makeSetUp()
         connect(this,&Backend::ReadFromDb,m_dbHandler,&DBhandler::read);
 
         connect(m_dbHandler,&DBhandler::readingFinished,m_mainWindow,&MainWindow::setTable);
+        connect(m_dbHandler,&DBhandler::setMessage,m_mainWindow,&MainWindow::onSetMessage);
+        connect(m_mainWindow,&MainWindow::onDbDataSaved,m_dbHandler,&DBhandler::Reopen);
 
         dbThread->start();
         fmThread->start();
     }
     catch(const QException &e){
-        qDebug() << e.what();
+        QMessageBox::critical(nullptr,"Error","An error has occured while server starting");
         this->deleteLater();
     }
 }
