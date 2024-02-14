@@ -129,7 +129,7 @@ void MainWindow::onConnectionSettingsClicked(QAction *action)
     ConnectionSettings *connectionSettings=new ConnectionSettings;
     connect(connectionSettings,&ConnectionSettings::dataSaved,this,&MainWindow::onDataSaved);
     connectionSettings->setGeometry(QRect(QCursor::pos().x(),QCursor::pos().y(),this->size().width()/3,this->size().height()/2));
-    connectionSettings->setFixedSize(connectionSettings->geometry().width()+160,connectionSettings->geometry().height());
+    connectionSettings->setFixedSize(connectionSettings->geometry().width()+180,connectionSettings->geometry().height());
     connectionSettings->show();
 }
 
