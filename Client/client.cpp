@@ -73,11 +73,9 @@ void Client::connectToServer()
     m_socket->connectToHost(serverAddr,port);//2323
 
     if(m_socket->waitForConnected(int(3000))){
-        emit disableUiBlock();
         emit setMessage("Success","Connected","information");
     }
     else {
-        emit disableUiBlock();
         emit setMessage("Error","Connection timeout reached","warning");
     }
 }

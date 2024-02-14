@@ -25,7 +25,6 @@ private:
     QRegularExpression ipRex{"([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3})"};
 
 signals:
-    void disableUiBlock();
     void setMessage(const QString &title,const QString &text,const QString &type);
     void imageSent();
     void changeStatus(const int);
