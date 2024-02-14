@@ -5,7 +5,7 @@
 
 LocalDataManager::LocalDataManager(){}
 
-void LocalDataManager::setConnectionData(const QHostAddress ip, const qint16 port, const bool flag)
+void LocalDataManager::saveConnectionData(const QHostAddress ip, const qint16 port, const bool flag)
 {
     QFile userData{"./connectionData.json"};
     userData.open(QIODevice::ReadOnly);
