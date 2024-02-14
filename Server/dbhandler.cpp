@@ -1,9 +1,10 @@
 #include "dbhandler.h"
+#include <localdatamanager.h>
 
 DBhandler::DBhandler(QObject *parent)
     : QObject{parent}
 {
-
+    dbData=LocalDataManager::getDbData();
 }
 
 DBhandler::~DBhandler(){
@@ -12,12 +13,34 @@ DBhandler::~DBhandler(){
     }
 }
 
+void DBhandler::Reopen(){ //Для того, чтобы база открылась с обновленными данными из dbSettings окна
+    if(db.isOpen()){
+        db.close();
+        dbData=LocalDataManager::getDbData();
+        this->open();
+    }
+    else{
+        dbData=LocalDataManager::getDbData();
+        this->open();
+    }
+}
+
 void DBhandler::open()
 {
-    db = QSqlDatabase::addDatabase(dbDriveName);
-    db.setDatabaseName(dbName);
-    db.setHostName(hostName);
+    db = QSqlDatabase::addDatabase(dbData["dbDriverName"].toString());
+    db.setDatabaseName(dbData["dbName"].toString());
+    db.setHostName(dbData["hostName"].toString());
+    db.setUserName(dbData["user"].toString());
+    db.setPassword(dbData["password"].toString());
     db.open();
+    if(db.isOpen()){
+        qDebug() << "db is NOT open";
+        emit setMessage("Success","Database connected","information");
+    }
+    else{
+        qDebug() << "db is NOT open";
+        emit setMessage("Connection faild","Unable connect to database.Please,check settings","information");
+    }
 }
 
 void DBhandler::write(const QString imageName, const QString path, const QString date)
@@ -29,7 +52,7 @@ void DBhandler::write(const QString imageName, const QString path, const QString
     query.addBindValue(date);
 
     if(!query.exec()){
-        qDebug() << query.lastError();
+        emit setMessage("Query error",query.lastError().text(),"critical");
     }
 }
 
@@ -42,4 +65,6 @@ void DBhandler::read()
     model->setQuery(std::move(query));
     emit readingFinished(model);
 }
+
+
 

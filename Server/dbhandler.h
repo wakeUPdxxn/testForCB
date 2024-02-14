@@ -20,18 +20,15 @@ public:
 public slots:
     void write(const QString imageName,const QString path,const QString date);
     void read();
+    void Reopen();
 
 signals:
     void readingFinished(QSqlQueryModel* model);
+    void setMessage(const QString &title,const QString &text,const QString &type);
 
 private:
     QSqlDatabase db;
-    quint16 port;
-    QString dbName="..\\testDb.db";
-    QString hostName="localhost";
-    QString userName;
-    QString password;
-    QString dbDriveName="QSQLITE";
-    QString dbPath;
+    QVariantMap dbData;
+    void makeSetUp();
 };
 
