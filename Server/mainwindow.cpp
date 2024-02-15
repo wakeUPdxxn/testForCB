@@ -84,9 +84,11 @@ void MainWindow::onDbSettingsClicked(QAction *action)
 {
 
     if(action->text()=="Database settings"){
-        DBsettings *dbSettings=new DBsettings;
+        DBsettings *dbSettings=new DBsettings();
 
         connect(dbSettings,&DBsettings::dataSaved,this,&MainWindow::onDbDataSaved);
+        connect(dbSettings,&DBsettings::setMessage,this,&MainWindow::onSetMessage);
+        connect(dbSettings,&DBsettings::dataSaved,dbSettings,&DBsettings::deleteLater);
 
         dbSettings->setGeometry(QRect(QCursor::pos().x(),QCursor::pos().y(),this->size().width()/2,this->size().height()));
         dbSettings->setFixedSize(dbSettings->geometry().width()+160,dbSettings->geometry().height()-200);
@@ -103,8 +105,8 @@ void MainWindow::onDbSettingsClicked(QAction *action)
         foreach (auto address, allowedAddresses) {
             infoStr+=address.toString()+"\n";
         }
-        infoStr+="on port:" + QString::number(get<1>(LocalDataManager::getConfigData()));
-        infoStr+="\nand listening" + get<0>(LocalDataManager::getConfigData()).toString() + " address(es)";
+        infoStr+="on port:" + QString::number(std::get<1>(LocalDataManager::getConfigData()));
+        infoStr+="\nand listening " + std::get<0>(LocalDataManager::getConfigData()) + " address(es)";
 
         QMessageBox::information(this,"Server info",infoStr);
     }
