@@ -31,15 +31,21 @@ void Client::responseReceived()
     if(response=="received"){
        emit imageSent();
     }
+    else if(response=="disconnected"){
+        m_socket->disconnect();
+    }
+
 }
 
 void Client::onSendImage(const QPixmap *image,const QString name)
 {
     if(m_socket->state()!=QAbstractSocket::ConnectedState){
         emit setMessage("Error","Connection lost, try reconnect","warning");
+        return;
     }
-
-    data.clear();
+    if(!data.isEmpty()){
+        data.clear();
+    }
     QDataStream out(&data,QIODevice::WriteOnly);
 
     out<<qint64(0)<<name<<*image;
