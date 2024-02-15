@@ -42,6 +42,7 @@ void MainWindow::setTable(QSqlQueryModel *model)
     table->setWindowTitle("Database data");
     table->setAttribute(Qt::WA_DeleteOnClose);
     table->setModel(model);
+
     QSize size(this->width()/2,this->height()/1.5);
     table->setMinimumSize(size);
     table->setStyleSheet("QHeaderView::section { background-color:rgb(126, 132, 255); }"
