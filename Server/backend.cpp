@@ -27,6 +27,8 @@ Backend::~Backend(){
         m_mainWindow->deleteLater();
     }
     foreach (auto socket, clients) {
+        socket->write(QByteArray("disconnected"));
+        socket->waitForBytesWritten(1000);
         socket->deleteLater();
     }
 }
