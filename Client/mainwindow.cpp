@@ -89,12 +89,11 @@ void MainWindow::on_send_pressed(){
 void MainWindow::on_send_released()
 {
     ui->send->setGraphicsEffect(nullptr);
-    if(imagesToSend.isEmpty()){
+    if(imageProcesingQueue.isEmpty()){
         QMessageBox::warning(this,"Attention","Image(s) not selected");
         return;
     }
 
-    imagesToSend.clear();
     ui->listWidget->clear();
     ui->sending_lbl->setText("Sending 1 of " + QString::number(imageProcesingQueue.size()));
     ui->progressBar->setValue(0);
