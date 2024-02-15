@@ -1,5 +1,7 @@
 #include "popup.h"
+#include "qscreen.h"
 #include <QPainter>
+#include <QApplication>
 
 PopUp::PopUp(QWidget *parent)
     : QWidget(parent)
@@ -69,7 +71,8 @@ void PopUp::show()
     animation.setStartValue(0.0);
     animation.setEndValue(1.0);
 
-    setGeometry(QRect(0,0,200,100));
+    QApplication::beep();
+    setGeometry(screen()->size().width()-225,screen()->size().height()-100,200,100);
     QWidget::show();
 
     animation.start();
