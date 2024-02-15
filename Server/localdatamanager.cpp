@@ -1,21 +1,24 @@
 #include "localdatamanager.h"
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QCoreApplication>
 
 LocalDataManager::LocalDataManager(QObject *parent)
     : QObject{parent}
 {
-    if(!QFile::exists(storagePath)){
-        rootFolder.mkdir(storagePath);
-    }
+    rootFolder.setPath(QCoreApplication::applicationDirPath());
+}
+
+LocalDataManager::LocalDataManager(const QString &storagePath)
+{
+    rootFolder.setPath(QCoreApplication::applicationDirPath());
+    this->setStoragePath(storagePath);
 }
 
 void LocalDataManager::onNewImage(const QPixmap *image,const QString name)
 {;
     QImage img = image->toImage();
-    QString path=storagePath+"/"+name;
-    qDebug() << path;
-    if(!img.save(path)){
+    if(!img.save(storageDir.absolutePath()+"/"+name)){
         qDebug() << "img saving error";
     }
     emit fmImageProcessed();
@@ -23,18 +26,22 @@ void LocalDataManager::onNewImage(const QPixmap *image,const QString name)
 
 QString LocalDataManager::getStoragePath() const
 {
-    return storagePath;
+    return storageDir.absolutePath();
 }
 
 void LocalDataManager::setStoragePath(const QString &path)
-{
-    this->storagePath=path;
+{  
+    if(!QFile::exists(path)) { //≈сли указанна€ в конфиге директори€ отсутствует, то она будет создана автоматически
+        storageDir.mkdir(path);
+    }
+    else{
+        storageDir.cd(path);
+    }
 }
 
 uint LocalDataManager::GetImagesCount()
 {
-    rootFolder.cd(storagePath);
-    return rootFolder.count()-2;
+    return storageDir.count()-2;
 }
 
 void LocalDataManager::saveDbData(const QString name, const QString host, const std::optional<QString> user, const std::optional<QString> password, const QString driver)
@@ -69,7 +76,7 @@ void LocalDataManager::saveDbData(const QString name, const QString host, const 
 
 QVariantMap LocalDataManager::getDbData()
 {
-    QFile config{"./configs/dbConf.json"};
+    QFile config{QCoreApplication::applicationDirPath()+"/configs/dbConf.json"};
     config.open(QIODevice::ReadOnly);  
     QJsonObject obj = QJsonDocument::fromJson(config.readAll()).object();
     config.close();
@@ -77,7 +84,7 @@ QVariantMap LocalDataManager::getDbData()
        config.open(QIODevice::WriteOnly);
 
        QVariantMap data;
-       data["dbName"]="./testDb.db";
+       data["dbName"]=QCoreApplication::applicationDirPath()+"/testDb.db";
        data["hostName"]="localhost";
        data["user"]="";
        data["password"]="";
@@ -93,19 +100,26 @@ QVariantMap LocalDataManager::getDbData()
     }
 }
 
-std::tuple<QHostAddress, quint16, QString> LocalDataManager::getConfigData()
+std::tuple<QString, quint16, QString> LocalDataManager::getConfigData()
 {
-    QFile config{"./configs/config.json"};
+    if(!QFile::exists(QCoreApplication::applicationDirPath()+"/configs")){
+       QDir(QCoreApplication::applicationDirPath()).mkdir("configs");
+    }
+
+    QFile config{QCoreApplication::applicationDirPath()+"/configs/config.json"};
     config.open(QIODevice::ReadOnly);
+
     QJsonObject obj=QJsonDocument::fromJson(config.readAll()).object();
+
     config.close();
+
     if(obj.isEmpty()){
        config.open(QIODevice::WriteOnly);
 
        QVariantMap data;
-       data["listetingAddress(es)"]="localhost";
+       data["listetingAddress(es)"]=QHostAddress::LocalHost;
        data["port"]="2323";
-       data["downloadFolderPath"]="./Downloads/";
+       data["downloadFolderPath"]=QCoreApplication::applicationDirPath()+"/Downloads";
 
        config.write(QJsonDocument::fromVariant(data).toJson());
        config.close();
@@ -113,6 +127,10 @@ std::tuple<QHostAddress, quint16, QString> LocalDataManager::getConfigData()
        return getConfigData();
     }
     else{
-        return {QHostAddress(obj["listetingAddress(es)"].toString()),obj["port"].toString().toUInt(),obj["downloadFolderPath"].toString()};
+        return {obj["listetingAddress(es)"].toString(),obj["port"].toString().toUInt(),obj["downloadFolderPath"].toString()};
     }
 }
+
+
+
+
