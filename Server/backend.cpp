@@ -33,7 +33,9 @@ Backend::~Backend(){
 void Backend::makeSetUp()
 {
     try{
-        m_dataManager = new LocalDataManager();
+        auto confData = LocalDataManager::getConfigData();
+
+        m_dataManager = new LocalDataManager(std::get<2>(confData));
 
         fmThread=new QThread;
         m_dataManager->moveToThread(fmThread);
@@ -52,9 +54,7 @@ void Backend::makeSetUp()
         m_mainWindow->ui->totalReceived->setText(QString::number(m_dataManager->GetImagesCount()));
         m_mainWindow->show();
 
-        auto confData = LocalDataManager::getConfigData();
-        m_dataManager->setStoragePath(get<2>(confData));
-        this->listen(std::get<0>(confData),std::get<1>(confData));
+        this->listen(QHostAddress(std::get<0>(confData)),std::get<1>(confData));
         connect(this,&Backend::newConnection,this,&Backend::connectionHandler);
 
         m_dbHandler = new DBhandler();  //initial db
