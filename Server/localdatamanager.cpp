@@ -33,6 +33,7 @@ void LocalDataManager::setStoragePath(const QString &path)
 {  
     if(!QFile::exists(path)) { //≈сли указанна€ в конфиге директори€ отсутствует, то она будет создана автоматически
         storageDir.mkdir(path);
+        storageDir.cd(path);
     }
     else{
         storageDir.cd(path);
