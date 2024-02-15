@@ -2,12 +2,13 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QApplication>
 
 LocalDataManager::LocalDataManager(){}
 
 void LocalDataManager::saveConnectionData(const QHostAddress ip, const qint16 port, const bool flag)
 {
-    QFile userData{"./connectionData.json"};
+    QFile userData{QApplication::applicationDirPath()+"/connectionData.json"};
     userData.open(QIODevice::ReadOnly);
     QJsonObject obj=QJsonDocument::fromJson(userData.readAll()).object();
     userData.close();
@@ -27,7 +28,7 @@ void LocalDataManager::saveConnectionData(const QHostAddress ip, const qint16 po
 
 std::tuple<QHostAddress,quint16,bool> LocalDataManager::getConnectionData()
 {
-    QFile userData{"./connectionData.json"};
+    QFile userData{QApplication::applicationDirPath()+"/connectionData.json"};
     userData.open(QIODevice::ReadOnly);
     QJsonObject obj=QJsonDocument::fromJson(userData.readAll()).object();
     userData.close();
