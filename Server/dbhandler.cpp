@@ -14,22 +14,15 @@ DBhandler::~DBhandler(){
 }
 
 void DBhandler::Reopen(){ //Для того, чтобы база открылась с обновленными данными из dbSettings окна
-    if(db.isOpen()){
-        db.close();
-        dbData=LocalDataManager::getDbData();
-        this->open();
-    }
-    else{
-        dbData=LocalDataManager::getDbData();
-        this->open();
-    }
+    dbData=LocalDataManager::getDbData();
+    this->open();
+
 }
 
 void DBhandler::open()
 {
-    if(!QFile::exists(dbData["dbName"].toString())){
-        emit setMessage("Database error","Database doesnt not exists","error");
-        return;
+    if(db.isOpen()){
+        db.close();
     }
     db = QSqlDatabase::addDatabase(dbData["dbDriverName"].toString());
     db.setDatabaseName(dbData["dbName"].toString());
@@ -41,7 +34,7 @@ void DBhandler::open()
         emit setMessage("Success","Database connected","information");
     }
     else{
-        emit setMessage("Connection faild","Unable connect to database.Please,check settings","information");
+        emit setMessage("Database error",db.lastError().text(),"error");
     }
 }
 
