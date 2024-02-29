@@ -44,7 +44,6 @@ void PopUp::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-
     QRect roundedRect;
     roundedRect.setX(rect().x() + 5);
     roundedRect.setY(rect().y() + 5);
