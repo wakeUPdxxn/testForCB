@@ -17,7 +17,7 @@ public:
     ~Backend();
 
 private:
-    MainWindow *m_mainWindow;//убрать из этого класса вообще и сделать backend friend в window
+    MainWindow *m_mainWindow;
     QList<QTcpSocket*> clients;
     DBhandler *m_dbHandler;
     LocalDataManager *m_dataManager;
