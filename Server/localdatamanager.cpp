@@ -47,7 +47,7 @@ uint LocalDataManager::GetImagesCount()
 
 void LocalDataManager::saveDbData(const QString name, const QString host, const std::optional<QString> user, const std::optional<QString> password, const QString driver)
 {
-    QFile config{"./configs/dbConf.json"};
+    QFile config{QCoreApplication::applicationDirPath()+"/configs/dbConf.json"};
     config.open(QIODevice::WriteOnly);
     QVariantMap data;
 
@@ -71,6 +71,7 @@ void LocalDataManager::saveDbData(const QString name, const QString host, const 
     }
 
     QJsonDocument jdoc=QJsonDocument::fromVariant(data);
+
     config.write(jdoc.toJson());
     config.close();
 }
