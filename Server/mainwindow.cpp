@@ -49,8 +49,6 @@ void MainWindow::setTable(QSqlQueryModel *model)
                             "stop: 0 blue, stop: 1 rgb(83, 189, 255));"
                          "}"
                          "font: bold 20px;");
-
-    //table->hideColumn(0);
     table->show();
 }
 
