@@ -19,11 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
                             p_Screen->geometry().width()/3,
                             p_Screen->geometry().height()/2));
 
-    model=new QStandardItemModel;
-    ui->listView->setModel(model);
-
     m_popUp = new PopUp;
-    m_popUp->setText("Server started!");
 
     connect(ui->Menu,SIGNAL(triggered(QAction*)),SLOT(onDbSettingsClicked(QAction*)));
 }
@@ -31,7 +27,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     m_popUp->deleteLater();
-    model->deleteLater();
     delete ui;
 }
 
@@ -55,7 +50,7 @@ void MainWindow::setTable(QSqlQueryModel *model)
                          "}"
                          "font: bold 20px;");
 
-    table->hideColumn(0);
+    //table->hideColumn(0);
     table->show();
 }
 
@@ -64,14 +59,23 @@ void MainWindow::onNewImage(const QPixmap *image, const QString name)
     m_popUp->setText("New image! " + name);
     m_popUp->show();
 
-    QStandardItem *text = new QStandardItem;
-    text->setText(name);
-    QStandardItem *item = new QStandardItem;
-    item->setData(image->scaled(ui->frame->frameRect().height()/2,ui->frame->frameRect().width()/4), Qt::DecorationRole);
+    QSize messageWigdetSize(ui->frame->frameRect().height()/2,ui->frame->frameRect().width()/4);
 
-    model->appendRow(text);
-    model->appendRow(item);
-    ui->listView->update();
+    QListWidgetItem *message = new QListWidgetItem;
+    message->setSizeHint(QSize(messageWigdetSize));
+    ui->listWidget->addItem(message);
+
+    QLabel *message_img_lbl = new QLabel("");
+    message_img_lbl->setPixmap(image->scaled(messageWigdetSize));
+
+    QLabel *message_imgName_lbl = new QLabel(name);
+
+    QWidget *msg = new QWidget;
+    msg->setLayout(new QVBoxLayout);
+    msg->layout()->addWidget(message_imgName_lbl);
+    msg->layout()->addWidget(message_img_lbl);
+
+    ui->listWidget->setItemWidget(message,msg);
     ui->totalReceived->setText(QString::number(ui->totalReceived->text().toInt()+1));
 }
 
@@ -106,8 +110,8 @@ void MainWindow::onDbSettingsClicked(QAction *action)
         foreach (auto address, allowedAddresses) {
             infoStr+=address.toString()+"\n";
         }
-        infoStr+="on port:" + QString::number(std::get<1>(LocalDataManager::getConfigData()));
-        infoStr+="\nand listening " + std::get<0>(LocalDataManager::getConfigData()) + " address(es)";
+        infoStr+="on port:" + QString::number(std::get<1>(LocalDataManager::getConfigData())) + "\n"
+                +"and listening " + std::get<0>(LocalDataManager::getConfigData()) + " address(es)";
 
         QMessageBox::information(this,"Server info",infoStr);
     }

@@ -36,6 +36,5 @@ private slots:
     void on_getDB_pb_released();
 
 private:
-    QStandardItemModel *model;
     PopUp *m_popUp;
 };
