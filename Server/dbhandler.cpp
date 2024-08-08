@@ -19,6 +19,18 @@ void DBhandler::Reopen(){ //Для того, чтобы база открылась с обновленными данным
 
 }
 
+void DBhandler::CheckTableExists(){
+    QSqlQuery query;
+    query.prepare("CREATE TABLE IF NOT EXISTS images ("
+                  "name TEXT,"
+                  "path TEXT,"
+                  "date TEXT"
+                  ")");
+    if(!query.exec()){
+        emit setMessage("Query error",query.lastError().text(),"critical");
+    }
+}
+
 void DBhandler::open()
 {
     if(db.isOpen()){
@@ -31,6 +43,7 @@ void DBhandler::open()
     db.setPassword(dbData["password"].toString());
     db.open();
     if(db.isOpen()){
+        CheckTableExists();
         emit setMessage("Success","Database connected","information");
     }
     else{

@@ -30,5 +30,6 @@ private:
     QSqlDatabase db;
     QVariantMap dbData;
     void makeSetUp();
+    void CheckTableExists();
 };
 
