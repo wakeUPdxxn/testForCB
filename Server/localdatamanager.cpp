@@ -86,7 +86,7 @@ QVariantMap LocalDataManager::getDbData()
        config.open(QIODevice::WriteOnly);
 
        QVariantMap data;
-       data["dbName"]=QCoreApplication::applicationDirPath()+"/testDb.db";
+       data["dbName"]=QCoreApplication::applicationDirPath()+"/tempDB.db";
        data["hostName"]="localhost";
        data["user"]="";
        data["password"]="";
